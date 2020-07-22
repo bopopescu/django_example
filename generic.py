@@ -197,7 +197,7 @@ def clearAllNotification(request):
     if request.user.is_superuser:
         pass
     else:
-        with dbRouter.in_database('slave'):
+        with dbRouter.in_database('subordinate'):
             for it in models.PolicyArt.objects.filter(
                     Q(distribution__district__ora_index=request.user.locate.ora_index) & Q(articleStatus=2)).exclude(
                 distribution__readers__user=request.user).values('articleid').iterator():

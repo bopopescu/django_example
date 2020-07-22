@@ -126,7 +126,7 @@ class ItemProcess(View, metaclass=tools.SingleInstance):
         kwargs['tail'] = self.tail
         if default.debug:
             print(f"in the ItemProcess dispatch actions:{self.actions}, tail:{self.tail}")
-        with dbRouter.in_database('slave'):
+        with dbRouter.in_database('subordinate'):
             for group in request.user.groups.all():
                 objs = group.permissions.filter(codename__in=self.actions)
                 if objs.count() != len(self.actions):
@@ -166,36 +166,36 @@ def detailProcess(request: HttpRequest, actions: list, *args, **kwargs):
     """
     # 功能菜单深度
     actions_len = len(actions)
-    master, second, ternary, fourth, fiveth = [None for _ in range(5)]
+    main, second, ternary, fourth, fiveth = [None for _ in range(5)]
     if actions_len == 1:
-        master = actions[0]
+        main = actions[0]
     # 二级功能菜单
     elif actions_len == 2:
-        master, second = actions
+        main, second = actions
     # 三级功能菜单
     elif actions_len == 3:
-        master, second, ternary = actions
+        main, second, ternary = actions
     # 四级功能菜单
     elif actions_len == 4:
-        master, second, ternary, fourth = actions
+        main, second, ternary, fourth = actions
     # 五级功能菜单
     elif actions_len == 5:
-        master, second, ternary, fourth, fiveth = actions
+        main, second, ternary, fourth, fiveth = actions
     # 首页
-    if master == local.home.name:
+    if main == local.home.name:
         if second == local.lastestPolicyEntry.name:
             return generic.HomeContent.as_view()(request, *args, **kwargs)
         elif second == local.media.name:
             return generic.HomeContent.as_view()(request, *args, **kwargs)
     # 政策发布
-    elif master == local.polices.name:
+    elif main == local.polices.name:
         if second == local.elderPolicy.name:
             if ternary == local.lastestPolicy.name:
                 return generic.LastePolicy.as_view()(request, *args, **kwargs)
             elif ternary == local.policyRelease.name:
                 return generic.PolicyRelease.as_view()(request, *args, **kwargs)
     # 资料查询
-    elif master == local.information.name:
+    elif main == local.information.name:
         if second == local.olderInfo.name:
             if ternary == local.olderQuery.name:
                 return generic.olderQuery.as_view()(request, *args, **kwargs)
@@ -225,7 +225,7 @@ def detailProcess(request: HttpRequest, actions: list, *args, **kwargs):
         elif second == local.callCenter.name:
             if ternary == local.callCenterRecord.name:
                 return generic.CallCenterManage.as_view()(request, *args, **kwargs)
-    elif master == local.system.name:
+    elif main == local.system.name:
         # 个人中心
         if second == local.personCenter.name:
             if ternary == local.myAccountInfo.name:
@@ -244,6 +244,6 @@ def detailProcess(request: HttpRequest, actions: list, *args, **kwargs):
         elif second == local.logging.name:
             if ternary == local.logInquery.name:
                 return generic.Logging.as_view()(request, *args, **kwargs)
-    elif master == local.dataMap.name:
+    elif main == local.dataMap.name:
         return generic.DataMap.as_view()(request, *args, **kwargs)
     return tools.genErrorStatusResponse(error.status_unAuthorized)

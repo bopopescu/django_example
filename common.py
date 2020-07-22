@@ -176,7 +176,7 @@ def checkCustomerizedPerms(data, name):
     return perms
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def getDistricts(locationid=0, *args, **kwargs):
     ds = []
     mx = max(default.belongs.keys())
@@ -245,7 +245,7 @@ def getDistrictLevel(request):
     return tools.genErrorStatusResponse(error.status_200, ds)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def getDistrictHierarchy(request):
     def hierarchy(location, level_val):
         ds = []
@@ -312,7 +312,7 @@ def checkCreateUserRole(role, request):
     return True, ds[role]
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def getDistrictHierarchyForCreateUser(request):
     """
         获取地区层级
@@ -375,7 +375,7 @@ def getDistrictHierarchyForCreateUser(request):
     return tools.genErrorStatusResponse(error.status_200, data=[dt.toJson, ])
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def usersDynamicSearch(request):
     """
         用户动态搜索
@@ -432,7 +432,7 @@ def usersDynamicSearch(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{'total': total})
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def userDynamicAdvancedSearch(request):
     """
         用户管理动态高级搜索
@@ -513,7 +513,7 @@ def userDynamicAdvancedSearch(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{"total": total})
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def userAdvancedDynamicParam(request):
     """
         用户管理动态搜索信息获取
@@ -725,7 +725,7 @@ def districtUpdateOrCreate(request, created=False):
     if level not in default.belongs or status not in default.status:
         return tools.genErrorStatusResponse(error.status_checkValueError)
     # 只能创建自己的下属
-    with dbRouter.in_database("slave"):
+    with dbRouter.in_database("subordinate"):
         if not models.District.objects.filter(ora_index=parent).exists():
             return tools.genErrorStatusResponse(error.status_notFound)
         genre = request.user.groups.all()[0].genre
@@ -818,7 +818,7 @@ def modifyDistrictOrder(request):
     return tools.genErrorStatusResponse(error.status_200)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def getBasicGenres(request):
     genre_set = set()
     genre = request.user.groups.all()[0].genre
@@ -843,7 +843,7 @@ def getBasicGenres(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{"total": total})
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def getRoles(request):
     """
         获取角色组
@@ -954,7 +954,7 @@ def roleDelete(request):
     return tools.genErrorStatusResponse(error.status_notFound)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def userLists(request):
     """
         获取用户列表
@@ -1040,7 +1040,7 @@ def userLists(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{'total': total})
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def getUserRoles(request):
     """
         创建用户,角色获取
@@ -1215,7 +1215,7 @@ def deleteUser(request):
     return tools.genErrorStatusResponse(error.status_200)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def personalInfo(request):
     dt = tools.BaseData()
     dt.username, dt.name_zh, dt.phone, dt.email = request.user.username, request.user.last_name, request.user.phone, request.user.email
@@ -1260,7 +1260,7 @@ def updatePassword(request):
     return tools.genErrorStatusResponse(error.status_200)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def logList(request):
     form = requestForms.Page(request.GET)
     if not form.is_valid():
@@ -1279,7 +1279,7 @@ def logList(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{'total': total})
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def detailLog(request):
     form = requestForms.IDForm(request.GET)
     if not form.is_valid():
@@ -1296,7 +1296,7 @@ def detailLog(request):
         return tools.genErrorStatusResponse(error.status_notFound)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def logDynamicSearch(request):
     """
         系统日志动态搜索
@@ -1343,7 +1343,7 @@ def logDynamicSearch(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{'total': total})
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def getAllStreets2(request):
     """
         获取所有的街道
@@ -1402,7 +1402,7 @@ def getAllStreets2(request):
     return ds
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def getAllCommunites(request):
     """
         获取街道下的社区
@@ -1856,7 +1856,7 @@ def makeQuery(request, baseForm=None):
     return query, form
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def genderAndPolitics_statistic(request):
     """
         性别与政治面貌统计
@@ -1919,7 +1919,7 @@ def genderAndPolitics_statistic(request):
         return tools.genErrorStatusResponse(error.status_200, ds)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def nationality_statistic(request):
     """
         民族人数统计
@@ -1963,7 +1963,7 @@ def nationality_statistic(request):
         return tools.genErrorStatusResponse(error.status_200, ds)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def peopleOfStreet_statistic(request):
     """
         当前选择范围的各街乡镇人数柱状图
@@ -2005,7 +2005,7 @@ def peopleOfStreet_statistic(request):
         return tools.genErrorStatusResponse(error.status_200, dt.toJson)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def peopleOfCommunity_statistic(request):
     """
         各社区人数统计
@@ -2047,7 +2047,7 @@ def peopleOfCommunity_statistic(request):
         return tools.genErrorStatusResponse(error.status_200, dt.toJson)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def insurance_statistic(request):
     """
         各年龄段保障对象人数统计
@@ -2126,7 +2126,7 @@ def insurance_statistic(request):
         return tools.genErrorStatusResponse(error.status_200, dt.toJson)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def olderList(request):
     """
         老人信息列表
@@ -2176,7 +2176,7 @@ def olderList(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{'total': total})
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def olderDetail(request):
     """
         老人详细信息
@@ -2315,7 +2315,7 @@ def olderDetail(request):
     return tools.genErrorStatusResponse(error.status_notFound)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def olderInfoGetEdit(request):
     """
         老人编辑页信息
@@ -2493,7 +2493,7 @@ def olderInfoGetEdit(request):
     return tools.genErrorStatusResponse(error.status_notFound)
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def olderDistrictLevel(request):
     """
         老人选择地区信息
@@ -3069,7 +3069,7 @@ def olderInfoUpdateOrCreate(request, created=False):
         return tools.genErrorStatusResponse(error.status_foundError)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def olderHealthArchive_conditions(request):
     """
         老人健康,条件获取,目前是假数据呈现
@@ -3146,7 +3146,7 @@ def olderHealthArchive_conditions(request):
     return tools.genErrorStatusResponse(error.status_200, ret)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def olderDataVisual_conditions(request):
     """
         老人健康,条件获取,目前是假数据呈现
@@ -3517,7 +3517,7 @@ def institutionMakeQuery(request, baseForm):
     return query, form
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def institutionsList(request):
     """
         机构查询接口
@@ -3562,7 +3562,7 @@ def institutionsList(request):
     return tools.genErrorStatusResponse(error.status_200, tmp, **{'total': total})
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def institutionDetail(request):
     """
         机构详情页
@@ -3946,7 +3946,7 @@ def institutionUpdateOrCreate(request, created=False):
             return tools.genErrorStatusResponse(error.status_foundError)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def institutionDistrictLevel(request, onlyData=False):
     """
         机构选择地区
@@ -4236,7 +4236,7 @@ def financialQuery(request, baseForm):
     return query, form
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def financialPineChart(request):
     """
         各来源财政投入预算占比统计
@@ -4296,7 +4296,7 @@ def financialPineChart(request):
     return tools.genErrorStatusResponse(error.status_200, out)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def financialHistogramChart(request):
     """
         各来源每月执行金额统计
@@ -4344,7 +4344,7 @@ def financialHistogramChart(request):
     return tools.genErrorStatusResponse(error.status_200, out, **{'date': date})
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def financialList(request):
     """
         财政项目列表
@@ -4383,7 +4383,7 @@ def financialList(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{"total": total})
 
 
-@dbRouter.in_database('slave')
+@dbRouter.in_database('subordinate')
 def financialDetail(request):
     """
         养老财政投入项目详情
@@ -4474,7 +4474,7 @@ def financialEditDetail(request):
         return tools.genErrorStatusResponse(error.status_foundError)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def financialDynamicSearch(request):
     """
         养老财政管理动态查询
@@ -4697,7 +4697,7 @@ def FinancialBasicForm(request):
     return tools.genErrorStatusResponse(error.status_200, dt.toJson)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def policyArticleDistrictLevel(request, districtIds=None, onlyNeed=False, onlySelected=False):
     """
         行政级别
@@ -4940,7 +4940,7 @@ def policyArtDelete(request):
             return tools.genErrorStatusResponse(error.status_notFound)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def policyPublishList(request):
     """
         首页最新政策文件列表
@@ -5016,7 +5016,7 @@ def policyPublishList(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{'total': total})
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def policyArticleList(request):
     """
         政策文件列表
@@ -5073,7 +5073,7 @@ def policyArticleList(request):
     return tools.genErrorStatusResponse(error.status_200, ds, **{'total': total})
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def policyArticlePreview(request, detail=False, editPage=False):
     """
         文件预览
@@ -5144,7 +5144,7 @@ def policyArticlePreview(request, detail=False, editPage=False):
         return tools.genErrorStatusResponse(error.status_notFound)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def policyDownloadAccessories(request, deleteAction=False):
     """
         政制文件附件下载
@@ -5250,7 +5250,7 @@ def policyArticleEditPage(request):
     return policyArticlePreview(request, detail=False, editPage=True)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def policyDynamicSearch(request, managed=False):
     """
         政策文件动态查询
@@ -5354,7 +5354,7 @@ def pollicyAccessoriesDelete(request):
     return tools.genErrorStatusResponse(error.status_foundError)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def policyArticleChart(request):
     """
         政策文件统计围标信息
@@ -5399,7 +5399,7 @@ def policyArticleChart(request):
         return tools.genErrorStatusResponse(error.status_notFound)
 
 
-@dbRouter.in_database("slave")
+@dbRouter.in_database("subordinate")
 def policyArticleStatisticList(request):
     """
         政策文件人员阅读情况
